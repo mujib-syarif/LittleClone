@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_subtitle">Duplicate apps, stay tidy.</string>
+
+    <string name="tab_apps">Apps</string>
+    <string name="tab_clones">Clones</string>
+
+    <string name="stat_clones">Clones</string>
+    <string name="stat_used">Used</string>
+    <string name="stat_free">Free</string>
+
+    <string name="search_hint">Search apps</string>
+    <string name="empty_apps">No clonable apps found.</string>
+    <string name="empty_clones">No clones yet. Pick an app, then tap Clone.</string>
+    <string name="loading">Loading apps…</string>
+
+    <string name="action_clone">Clone</string>
+    <string name="action_open">Open</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_create">Create clone</string>
+    <string name="action_allow">Allow</string>
+
+    <string name="setup_title">Set up Little Clone</string>
+    <string name="setup_install_title">Allow installs</string>
+    <string name="setup_install_desc">Required so finished clones can be installed on this phone.</string>
+
+    <string name="sheet_title">Clone %1$s</string>
+    <string name="sheet_name_label">Clone name</string>
+    <string name="sheet_package">Package</string>
+    <string name="sheet_size">Size</string>
+    <string name="sheet_parts">APK parts</string>
+    <string name="sheet_note">The clone installs as a separate app with its own data, so you can use a different account. Android will ask you to confirm the install.</string>
+
+    <string name="stage_prepare">Preparing</string>
+    <string name="stage_patch">Patching package</string>
+    <string name="stage_sign">Signing</string>
+    <string name="stage_install">Installing</string>
+    <string name="job_keep_open">Keep Little Clone open until this finishes.</string>
+
+    <string name="done_title">Clone ready</string>
+    <string name="done_body">%1$s is installed. Open it from the Clones tab or your home screen.</string>
+    <string name="error_title">Could not create the clone</string>
+    <string name="error_space">Not enough storage. About %1$s needed, %2$s available.</string>
+    <string name="error_install">Installation did not finish (%1$s). If Play Protect appears, choose “Install anyway”.</string>
+    <string name="error_install_cancelled">Installation was cancelled.</string>
+    <string name="error_install_timeout">The install confirmation was not received in time.</string>
+    <string name="error_generic">%1$s</string>
+    <string name="error_source_missing">The app files could not be read.</string>
+
+    <string name="default_clone_name">%1$s %2$d</string>
+    <string name="app_version">v%1$s</string>
+    <string name="apk_parts">%1$d APK</string>
+</resources>

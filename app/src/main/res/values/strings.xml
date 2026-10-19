@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default language: Indonesian. English lives in values-en. -->
+<resources>
+    <string name="app_name" translatable="false">Little Clone</string>
+    <string name="home_subtitle">Gandakan aplikasi, tetap rapi.</string>
+
+    <string name="tab_apps">Aplikasi</string>
+    <string name="tab_clones">Klon</string>
+
+    <string name="stat_clones">Klon</string>
+    <string name="stat_used">Terpakai</string>
+    <string name="stat_free">Tersisa</string>
+
+    <string name="search_hint">Cari aplikasi</string>
+    <string name="empty_apps">Tidak ada aplikasi yang bisa diklon.</string>
+    <string name="empty_clones">Belum ada klon. Pilih aplikasi, lalu ketuk Klon.</string>
+    <string name="loading">Memuat aplikasi…</string>
+
+    <string name="action_clone">Klon</string>
+    <string name="action_open">Buka</string>
+    <string name="action_remove">Hapus</string>
+    <string name="action_cancel">Batal</string>
+    <string name="action_ok">OK</string>
+    <string name="action_create">Buat klon</string>
+    <string name="action_allow">Izinkan</string>
+
+    <string name="setup_title">Siapkan Little Clone</string>
+    <string name="setup_install_title">Izinkan pemasangan</string>
+    <string name="setup_install_desc">Dibutuhkan agar hasil klon bisa dipasang di ponsel ini.</string>
+
+    <string name="sheet_title">Klon %1$s</string>
+    <string name="sheet_name_label">Nama klon</string>
+    <string name="sheet_package">Paket</string>
+    <string name="sheet_size">Ukuran</string>
+    <string name="sheet_parts">Komponen APK</string>
+    <string name="sheet_note">Klon dipasang sebagai aplikasi terpisah dengan data sendiri, sehingga Anda bisa memakai akun berbeda. Android akan meminta konfirmasi pemasangan.</string>
+
+    <string name="stage_prepare">Menyiapkan</string>
+    <string name="stage_patch">Memodifikasi paket</string>
+    <string name="stage_sign">Menandatangani</string>
+    <string name="stage_install">Memasang</string>
+    <string name="job_keep_open">Biarkan Little Clone tetap terbuka sampai selesai.</string>
+
+    <string name="done_title">Klon siap</string>
+    <string name="done_body">%1$s sudah terpasang. Anda bisa membukanya dari tab Klon atau layar utama.</string>
+    <string name="error_title">Gagal membuat klon</string>
+    <string name="error_space">Ruang penyimpanan kurang. Dibutuhkan sekitar %1$s, tersedia %2$s.</string>
+    <string name="error_install">Pemasangan tidak selesai (%1$s). Jika Play Protect muncul, pilih “Tetap instal”.</string>
+    <string name="error_install_cancelled">Pemasangan dibatalkan.</string>
+    <string name="error_install_timeout">Konfirmasi pemasangan tidak diterima tepat waktu.</string>
+    <string name="error_generic">%1$s</string>
+    <string name="error_source_missing">Berkas aplikasi tidak dapat dibaca.</string>
+
+    <string name="default_clone_name">%1$s %2$d</string>
+    <string name="app_version">v%1$s</string>
+    <string name="apk_parts">%1$d APK</string>
+</resources>

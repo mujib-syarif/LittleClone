@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Back square: outline only -->
+    <path
+        android:pathData="M40,31 H58 a9,9 0 0 1 9,9 V58 a9,9 0 0 1 -9,9 H40 a9,9 0 0 1 -9,-9 V40 a9,9 0 0 1 9,-9 Z"
+        android:strokeWidth="3"
+        android:strokeColor="#99FFFFFF" />
+    <!-- Front square: solid, hides the part of the outline it overlaps -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M50,41 H68 a9,9 0 0 1 9,9 V68 a9,9 0 0 1 -9,9 H50 a9,9 0 0 1 -9,-9 V50 a9,9 0 0 1 9,-9 Z" />
+</vector>

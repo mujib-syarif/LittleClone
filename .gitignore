@@ -1,0 +1,17 @@
+# Gradle / Android Studio
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keys must never be committed
+*.jks
+*.keystore
