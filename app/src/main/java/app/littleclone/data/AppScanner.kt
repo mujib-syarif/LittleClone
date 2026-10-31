@@ -14,13 +14,13 @@ class AppScanner(private val context: Context) {
     suspend fun scan(excluded: Set<String>): List<InstalledApp> = withContext(Dispatchers.IO) {
         val pm = context.packageManager
         val launcher = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        @Suppress("DEPRECATION")
-        val launchable = pm.queryIntentActivities(launcher, 0).map { it.activityInfo.packageName }.toSet()
 
         @Suppress("DEPRECATION")
-        val installed = pm.getInstalledApplications(0)
-        installed.asSequence()
-            .filter { it.packageName in launchable }
+        val launchable = pm.queryIntentActivities(launcher, 0)
+            .mapNotNull { it.activityInfo?.applicationInfo }
+            .distinctBy { it.packageName }
+
+        launchable.asSequence()
             .filter { it.packageName != context.packageName && it.packageName !in excluded }
             .filter { !isPlainSystemApp(it) }
             .mapNotNull { toApp(pm, it) }
