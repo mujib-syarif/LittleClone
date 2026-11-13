@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,9 +28,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +45,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.littleclone.R
 import app.littleclone.clone.Stage
 import app.littleclone.data.CloneRecord
@@ -115,6 +124,16 @@ fun HomeScreen(state: HomeState, actions: HomeActions) {
             if (selected != null) CloneSheet(selected, actions)
         }
         state.job?.let { JobOverlay(it, actions) }
+        // Back while a clone is running must not silently throw the work away: ask first.
+        // The key resets the flag whenever a job starts or ends.
+        var confirmStop by remember(state.job == null) { mutableStateOf(false) }
+        BackHandler(enabled = state.job != null) { confirmStop = true }
+        if (confirmStop && state.job != null) {
+            ConfirmStopOverlay(onContinue = { confirmStop = false }, onStop = {
+                confirmStop = false
+                actions.onCancelJob()
+            })
+        }
         state.message?.let { MessageOverlay(it, actions) }
     }
 }
@@ -165,10 +184,19 @@ private fun StatsModule(module: HomeModule.Stats, actions: HomeActions) {
 private fun StatTile(title: String, value: String, modifier: Modifier) {
     val t = LocalTokens.current
     GlassCard(modifier, RoundedCornerShape(20.dp)) {
-        Column(Modifier.padding(14.dp)) {
+        Column(Modifier.padding(12.dp)) {
             Label(title, Type.caption, t.textSecondary)
             Spacer(Modifier.height(4.dp))
-            Label(value, Type.stat, t.text)
+            // Shrink the number until it fits on one line (narrow phones, e.g. 360dp wide).
+            var valueSize by remember(value) { mutableStateOf(Type.stat.fontSize.value) }
+            BasicText(
+                value,
+                style = Type.stat.copy(color = t.text, fontSize = valueSize.sp),
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                onTextLayout = { if (it.hasVisualOverflow && valueSize > 14f) valueSize -= 1f },
+            )
         }
     }
 }
@@ -193,7 +221,10 @@ private fun TabsModule(module: HomeModule.Tabs, actions: HomeActions) {
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
+                            role = Role.Tab,
                         ) { actions.onTab(tab) }
+                        .semantics { selected = on }
+                        .heightIn(min = 48.dp)
                         .padding(vertical = 9.dp),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -208,7 +239,10 @@ private fun TabsModule(module: HomeModule.Tabs, actions: HomeActions) {
 private fun SearchField(query: String, onQuery: (String) -> Unit) {
     val t = LocalTokens.current
     GlassCard(Modifier.fillMaxWidth().padding(bottom = 12.dp), RoundedCornerShape(50)) {
-        Row(Modifier.padding(horizontal = 16.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier.heightIn(min = 48.dp).padding(horizontal = 16.dp, vertical = 11.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             GlyphIcon(Glyph.Search, t.textSecondary, size = 18.dp)
             Spacer(Modifier.width(10.dp))
             Box(Modifier.weight(1f)) {
@@ -279,10 +313,9 @@ private fun CloneRow(record: CloneRecord, actions: HomeActions) {
                 Label(record.label, Type.headline, t.text)
                 Label(record.clonePackage, Type.caption, t.textSecondary)
             }
-            Spacer(Modifier.width(8.dp))
-            GlyphButton(Glyph.Play, { actions.onOpen(record) })
-            Spacer(Modifier.width(8.dp))
-            GlyphButton(Glyph.Trash, { actions.onRemove(record) })
+            Spacer(Modifier.width(4.dp))
+            GlyphButton(Glyph.Play, { actions.onOpen(record) }, stringResource(R.string.cd_open_clone, record.label))
+            GlyphButton(Glyph.Trash, { actions.onRemove(record) }, stringResource(R.string.cd_remove_clone, record.label))
         }
     }
 }
@@ -312,7 +345,10 @@ private fun CloneSheet(app: InstalledApp, actions: HomeActions) {
         ) {
             GlassCard(Modifier.fillMaxWidth(), RoundedCornerShape(30.dp)) {
                 Box(Modifier.background(t.background.copy(alpha = if (t.dark) 0.55f else 0.35f))) {
-                    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Column(
+                        Modifier.verticalScroll(rememberScrollState()).padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AppIcon(app.packageName, 52.dp)
                             Spacer(Modifier.width(14.dp))
@@ -334,7 +370,7 @@ private fun CloneSheet(app: InstalledApp, actions: HomeActions) {
                         }
                         InfoRow(stringResource(R.string.sheet_size), actions.formatSize(app.sizeBytes))
                         InfoRow(stringResource(R.string.sheet_parts), app.partCount.toString())
-                        Label(stringResource(R.string.sheet_note), Type.caption, t.textSecondary, maxLines = 5)
+                        Label(stringResource(R.string.sheet_note), Type.caption, t.textSecondary, maxLines = 12)
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             PillButton(
                                 stringResource(R.string.action_cancel), { actions.onSelect(null) },
@@ -382,6 +418,37 @@ private fun JobOverlay(job: CloneJob, actions: HomeActions) {
                         Label(stringResource(R.string.job_keep_open), Type.caption, t.textTertiary, maxLines = 3)
                     }
                     PillButton(stringResource(R.string.action_cancel), actions.onCancelJob, kind = ButtonKind.Glass)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConfirmStopOverlay(onContinue: () -> Unit, onStop: () -> Unit) {
+    val t = LocalTokens.current
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Scrim { onContinue() }
+        GlassCard(Modifier.padding(28.dp).fillMaxWidth(), RoundedCornerShape(30.dp)) {
+            Box(Modifier.background(t.background.copy(alpha = if (t.dark) 0.6f else 0.4f))) {
+                Column(
+                    Modifier.padding(24.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Label(stringResource(R.string.confirm_stop_title), Type.title, t.text, maxLines = 2)
+                    Label(
+                        stringResource(R.string.confirm_stop_body),
+                        Type.body.copy(textAlign = TextAlign.Center), t.textSecondary, maxLines = 4,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        PillButton(
+                            stringResource(R.string.action_stop_clone), onStop,
+                            Modifier.weight(1f), ButtonKind.Glass,
+                        )
+                        PillButton(stringResource(R.string.action_continue), onContinue, Modifier.weight(1f))
+                    }
                 }
             }
         }

@@ -38,9 +38,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         app.cloneStore.reconcile(pm)
         _state.update { it.copy(missing = missingRequirements(), freeBytes = freeBytes()) }
         viewModelScope.launch {
-            val excluded = app.cloneStore.records.value.map { it.clonePackage }.toSet()
-            val apps = app.scanner.scan(excluded)
-            _state.update { it.copy(apps = apps, loading = false) }
+            try {
+                val excluded = app.cloneStore.records.value.map { it.clonePackage }.toSet()
+                val apps = app.scanner.scan(excluded)
+                _state.update { it.copy(apps = apps) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Keep the previous list; the screen must not stay on "loading" forever.
+            } finally {
+                _state.update { it.copy(loading = false) }
+            }
         }
     }
 

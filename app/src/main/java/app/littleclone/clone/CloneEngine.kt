@@ -1,6 +1,7 @@
 package app.littleclone.clone
 
 import android.content.Context
+import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.StatFs
 import android.text.format.Formatter
@@ -115,12 +116,7 @@ class CloneEngine(
                 InstallOutcome.Success -> Unit
                 InstallOutcome.Timeout -> throw CloneException(context.getString(R.string.error_install_timeout))
                 is InstallOutcome.Failure -> {
-                    if (outcome.status == android.content.pm.PackageInstaller.STATUS_FAILURE_ABORTED) {
-                        throw CloneException(context.getString(R.string.error_install_cancelled))
-                    }
-                    throw CloneException(
-                        context.getString(R.string.error_install, outcome.message ?: outcome.status.toString())
-                    )
+                    throw CloneException(installFailureText(outcome))
                 }
             }
             report(CloneProgress(Stage.Install, 1f))
@@ -147,6 +143,20 @@ class CloneEngine(
         } finally {
             work.deleteRecursively()
         }
+    }
+
+    /** Maps PackageInstaller's English status codes to a message in the app's language. */
+    private fun installFailureText(failure: InstallOutcome.Failure): String {
+        val res = when (failure.status) {
+            PackageInstaller.STATUS_FAILURE_ABORTED -> R.string.error_install_cancelled
+            PackageInstaller.STATUS_FAILURE_BLOCKED -> R.string.error_install_blocked
+            PackageInstaller.STATUS_FAILURE_INVALID -> R.string.error_install_invalid
+            PackageInstaller.STATUS_FAILURE_CONFLICT -> R.string.error_install_conflict
+            PackageInstaller.STATUS_FAILURE_STORAGE -> R.string.error_install_storage
+            PackageInstaller.STATUS_FAILURE_INCOMPATIBLE -> R.string.error_install_incompatible
+            else -> return context.getString(R.string.error_install, failure.message ?: failure.status.toString())
+        }
+        return context.getString(res)
     }
 
     /** Patched + signed copies plus the installer's staging copy: roughly three times the app. */

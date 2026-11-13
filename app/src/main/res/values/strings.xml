@@ -33,7 +33,7 @@
     <string name="sheet_package">Paket</string>
     <string name="sheet_size">Ukuran</string>
     <string name="sheet_parts">Komponen APK</string>
-    <string name="sheet_note">Klon dipasang sebagai aplikasi terpisah dengan data sendiri, sehingga Anda bisa memakai akun berbeda. Android akan meminta konfirmasi pemasangan.</string>
+    <string name="sheet_note">Klon dipasang sebagai aplikasi terpisah dengan data sendiri, sehingga Anda bisa memakai akun berbeda. Android akan meminta konfirmasi pemasangan.\n\nCatatan: aplikasi yang memakai Google Sign-In atau Play Integrity (mis. perbankan, dompet digital, sebagian game) bisa menolak login atau berjalan di klon karena tanda tangannya berbeda dari aplikasi asli.</string>
 
     <string name="stage_prepare">Menyiapkan</string>
     <string name="stage_patch">Memodifikasi paket</string>
@@ -46,10 +46,22 @@
     <string name="error_title">Gagal membuat klon</string>
     <string name="error_space">Ruang penyimpanan kurang. Dibutuhkan sekitar %1$s, tersedia %2$s.</string>
     <string name="error_install">Pemasangan tidak selesai (%1$s). Jika Play Protect muncul, pilih “Tetap instal”.</string>
+    <string name="error_install_blocked">Pemasangan diblokir oleh ponsel atau Play Protect. Jika Play Protect muncul, pilih “Tetap instal”.</string>
+    <string name="error_install_invalid">Android menganggap paket klon tidak valid. Aplikasi ini mungkin tidak bisa diklon.</string>
+    <string name="error_install_conflict">Bentrok dengan aplikasi yang sudah terpasang. Hapus klon lama bernomor sama, lalu coba lagi.</string>
+    <string name="error_install_storage">Ruang penyimpanan tidak cukup untuk memasang klon. Kosongkan ruang, lalu coba lagi.</string>
+    <string name="error_install_incompatible">Klon tidak kompatibel dengan ponsel ini (versi Android atau arsitektur CPU).</string>
     <string name="error_install_cancelled">Pemasangan dibatalkan.</string>
     <string name="error_install_timeout">Konfirmasi pemasangan tidak diterima tepat waktu.</string>
     <string name="error_generic">%1$s</string>
     <string name="error_source_missing">Berkas aplikasi tidak dapat dibaca.</string>
+
+    <string name="confirm_stop_title">Hentikan pembuatan klon?</string>
+    <string name="confirm_stop_body">Klon masih diproses. Jika keluar sekarang, prosesnya dibatalkan.</string>
+    <string name="action_continue">Lanjutkan</string>
+    <string name="action_stop_clone">Hentikan</string>
+    <string name="cd_open_clone">Buka klon %1$s</string>
+    <string name="cd_remove_clone">Hapus klon %1$s</string>
 
     <string name="default_clone_name">%1$s %2$d</string>
     <string name="app_version">v%1$s</string>
