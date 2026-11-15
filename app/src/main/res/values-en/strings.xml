@@ -31,7 +31,7 @@
     <string name="sheet_package">Package</string>
     <string name="sheet_size">Size</string>
     <string name="sheet_parts">APK parts</string>
-    <string name="sheet_note">The clone installs as a separate app with its own data, so you can use a different account. Android will ask you to confirm the install.</string>
+    <string name="sheet_note">The clone installs as a separate app with its own data, so you can use a different account. Android will ask you to confirm the install.\n\nNote: apps that use Google Sign-In or Play Integrity (e.g. banking, wallets, some games) may refuse to sign in or run in a clone because its signature differs from the original app.</string>
 
     <string name="stage_prepare">Preparing</string>
     <string name="stage_patch">Patching package</string>
@@ -44,10 +44,22 @@
     <string name="error_title">Could not create the clone</string>
     <string name="error_space">Not enough storage. About %1$s needed, %2$s available.</string>
     <string name="error_install">Installation did not finish (%1$s). If Play Protect appears, choose “Install anyway”.</string>
+    <string name="error_install_blocked">The install was blocked by the phone or Play Protect. If Play Protect appears, choose “Install anyway”.</string>
+    <string name="error_install_invalid">Android considers the clone package invalid. This app may not be cloneable.</string>
+    <string name="error_install_conflict">Conflicts with an app that is already installed. Remove the older clone with the same number and try again.</string>
+    <string name="error_install_storage">Not enough storage to install the clone. Free up space and try again.</string>
+    <string name="error_install_incompatible">The clone is not compatible with this phone (Android version or CPU architecture).</string>
     <string name="error_install_cancelled">Installation was cancelled.</string>
     <string name="error_install_timeout">The install confirmation was not received in time.</string>
     <string name="error_generic">%1$s</string>
     <string name="error_source_missing">The app files could not be read.</string>
+
+    <string name="confirm_stop_title">Stop creating the clone?</string>
+    <string name="confirm_stop_body">The clone is still being built. If you leave now, it will be cancelled.</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_stop_clone">Stop</string>
+    <string name="cd_open_clone">Open clone %1$s</string>
+    <string name="cd_remove_clone">Remove clone %1$s</string>
 
     <string name="default_clone_name">%1$s %2$d</string>
     <string name="app_version">v%1$s</string>

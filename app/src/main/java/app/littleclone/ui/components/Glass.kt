@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -34,6 +35,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.composed
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -87,13 +91,13 @@ fun GlassCard(
 }
 
 /** Click handling with the iOS "squish" and no ripple. */
-fun Modifier.pressable(enabled: Boolean = true, onClick: () -> Unit): Modifier = composed {
+fun Modifier.pressable(enabled: Boolean = true, role: Role? = null, onClick: () -> Unit): Modifier = composed {
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
     val scale by animateFloatAsState(if (pressed && enabled) 0.96f else 1f, label = "press")
     this
         .scale(scale)
-        .clickable(interactionSource = source, indication = null, enabled = enabled, onClick = onClick)
+        .clickable(interactionSource = source, indication = null, enabled = enabled, role = role, onClick = onClick)
 }
 
 enum class ButtonKind { Solid, Glass }
@@ -109,7 +113,7 @@ fun PillButton(
     val t = LocalTokens.current
     val shape = RoundedCornerShape(50)
     val color = if (kind == ButtonKind.Solid) t.onSolid else t.text
-    val base = modifier.pressable(enabled = enabled, onClick = onClick).clip(shape)
+    val base = modifier.pressable(enabled = enabled, role = Role.Button, onClick = onClick).clip(shape)
     val styled = if (kind == ButtonKind.Solid) {
         base.background(if (enabled) t.solid else t.textTertiary)
     } else {
@@ -117,7 +121,11 @@ fun PillButton(
             .background(Brush.verticalGradient(listOf(t.glassTop, t.glassBottom)))
             .border(1.dp, Brush.verticalGradient(listOf(t.strokeTop, t.strokeBottom)), shape)
     }
-    Box(styled.padding(horizontal = 20.dp, vertical = 11.dp), contentAlignment = Alignment.Center) {
+    // heightIn keeps the touch target at the 48dp minimum.
+    Box(
+        styled.heightIn(min = 48.dp).padding(horizontal = 20.dp, vertical = 11.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         BasicText(text, style = Type.headline.copy(color = color, textAlign = TextAlign.Center))
     }
 }
@@ -203,12 +211,15 @@ fun GlyphIcon(glyph: Glyph, color: Color, modifier: Modifier = Modifier, size: D
 
 /** Round glass button holding one glyph. */
 @Composable
-fun GlyphButton(glyph: Glyph, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun GlyphButton(glyph: Glyph, onClick: () -> Unit, contentDescription: String, modifier: Modifier = Modifier) {
     val t = LocalTokens.current
     Box(
         modifier
-            .pressable(onClick = onClick)
-            .size(36.dp)
+            .pressable(role = Role.Button, onClick = onClick)
+            .semantics { this.contentDescription = contentDescription }
+            // 48dp touch target around the 36dp visual circle.
+            .size(48.dp)
+            .padding(6.dp)
             .clip(CircleShape)
             .background(Brush.verticalGradient(listOf(t.glassTop, t.glassBottom)))
             .border(1.dp, Brush.verticalGradient(listOf(t.strokeTop, t.strokeBottom)), CircleShape),
